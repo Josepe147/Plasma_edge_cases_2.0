@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Plasma</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="nav.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>Login to Plasma</h1>
+</header>
+
+<main>
+  <section class="form-section">
+    <form id="loginForm">
+      <label>Username</label>
+      <input id="username" type="text" required autofocus>
+
+      <label>Password</label>
+      <input id="password" type="password" required>
+
+      <button type="submit" id="loginButton">Login</button>
+    </form>
+
+    <div id="statusOutput" style="margin-top: 20px;"></div>
+
+    <p style="text-align: center; margin-top: 30px;">
+      Don't have an account? <a href="register.html">Register here</a>
+    </p>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 Plasma</p>
+</footer>
+
+<script type="module" src="login.js"></script>
+</body>
+</html>

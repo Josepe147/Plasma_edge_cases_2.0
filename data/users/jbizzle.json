@@ -1,0 +1,16 @@
+{
+  "username": "jbizzle",
+  "passwordHash": "7f11fc62e9fd60fa8b25bb35fc0d5ba69811f6e96e68e0af1dadd2294766a57ccd6139a82dad236dfe38159775d6adb86e70d23676fab6764075c4c61a4c5076",
+  "salt": "03e9338e46df03b8b7c8cd4cee1ab344",
+  "forename": "Joshua",
+  "surname": "Beckett",
+  "email": "",
+  "walletAddress": "0xbecF2663cCa6A20e6770Dd2F02a46D6D62d5D11d",
+  "encryptedPrivateKey": {
+    "iv": "948119000806a6061f4ed840c5fd2e98",
+    "encryptedData": "953d3892102716095256d48970f0705b00e01cc87d9675222d029124aba1a81f84fbf75fadbf389cc15368d40eb703dabffea864dba067ed83a77e2f0abfc7e565d7",
+    "authTag": "1efcefb0d2cfcbb551766282f1df45a4"
+  },
+  "mnemonic": "life noble visit head vapor ordinary allow shock object pave entry rug",
+  "createdAt": "2026-02-07T20:44:13.958Z"
+}

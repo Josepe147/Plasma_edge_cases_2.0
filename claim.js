@@ -3,7 +3,8 @@ import {
   JsonRpcProvider,
   Contract,
   keccak256,
-  formatEther
+  formatEther,
+  Network
 } from "https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.min.js";
 
 // Configuration
@@ -16,7 +17,16 @@ const ESCROW_ABI = [
   "function getLink(bytes32 hash) external view returns (address sender, uint128 amount, uint64 expiry, bool claimed, bytes32 memoHash)"
 ];
 
-const provider = new JsonRpcProvider(RPC_URL);
+// Create provider with Plasma network config (ENS disabled)
+const plasmaNetwork = Network.from({
+  name: "plasma-testnet",
+  chainId: 9746
+});
+
+const provider = new JsonRpcProvider(RPC_URL, plasmaNetwork, {
+  staticNetwork: true,
+  ensAddress: null
+});
 
 // Parse URL parameters
 const urlParams = new URLSearchParams(window.location.hash.substring(1));

@@ -5,7 +5,8 @@ import {
   Contract,
   keccak256,
   randomBytes,
-  hexlify
+  hexlify,
+  Network
 } from "https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.min.js";
 
 // Configuration
@@ -19,11 +20,28 @@ const ESCROW_ABI = [
   "event LinkCreated(bytes32 indexed hash, address indexed sender, uint256 amount, uint64 expiry, bytes32 indexed memoHash)"
 ];
 
-// Get sender's wallet from localStorage (or use a fixed one for demo)
-const SENDER_PRIVATE_KEY = "0xaf09071a6eed1ca9314fb92e3460a1d49fad0caf88f3160184f6789d823eb1ef";
+// Check if user is logged in
+const storedPrivateKey = sessionStorage.getItem("plasmaPrivateKey");
+if (!storedPrivateKey) {
+  alert("Please login first!");
+  window.location.href = "login.html";
+  throw new Error("Not logged in");
+}
 
-const provider = new JsonRpcProvider(RPC_URL);
-const senderWallet = new Wallet(SENDER_PRIVATE_KEY, provider);
+// Create provider with Plasma network config (ENS disabled)
+// IMPORTANT: staticNetwork prevents ENS lookups
+const plasmaNetwork = Network.from({
+  name: "plasma-testnet",
+  chainId: 9746
+});
+
+const provider = new JsonRpcProvider(RPC_URL, plasmaNetwork, {
+  staticNetwork: true,
+  ensAddress: null
+});
+
+// Use logged-in user's wallet
+const senderWallet = new Wallet(storedPrivateKey, provider);
 const escrowContract = new Contract(ESCROW_CONTRACT_ADDRESS, ESCROW_ABI, senderWallet);
 
 const statusOutput = document.getElementById("statusOutput");
@@ -74,13 +92,21 @@ document.getElementById("sendForm").addEventListener("submit", async (e) => {
     // 5. Generate the claim link
     const claimUrl = `${window.location.origin}/claim.html#secret=${secret}&email=${encodeURIComponent(recipientEmail)}&amount=${amount}&message=${encodeURIComponent(message)}`;
 
-    // 6. Show success and the link
+    // 6. Send email to recipient
+    updateStatus("📧 Sending email to recipient...");
+    const emailSent = await sendEmailToRecipient(recipientEmail, claimUrl, amount, message);
+
+    // 7. Show success and the link
     updateStatus("✅ Escrow link created successfully!");
     linkOutput.style.display = "block";
     linkOutput.innerHTML = `
       <div style="padding: 20px; background: #e8f5e9; border-radius: 8px;">
         <h3>🎉 Link Created!</h3>
-        <p><strong>Send this link to ${recipientEmail}:</strong></p>
+        ${emailSent
+          ? `<p style="color: green;">✅ Email sent to ${recipientEmail}</p>`
+          : `<p style="color: orange;">⚠️ Email service unavailable. Please send the link manually.</p>`
+        }
+        <p><strong>Claim link:</strong></p>
         <div style="background: white; padding: 10px; border-radius: 4px; word-break: break-all; margin: 10px 0;">
           <code>${claimUrl}</code>
         </div>
@@ -93,9 +119,6 @@ document.getElementById("sendForm").addEventListener("submit", async (e) => {
       </div>
     `;
 
-    // Optional: Send email via backend
-    // await sendEmailToRecipient(recipientEmail, claimUrl, amount, message);
-
   } catch (error) {
     console.error("❌ Error:", error);
     updateStatus(`❌ Error: ${error.message || error}`, true);
@@ -104,19 +127,25 @@ document.getElementById("sendForm").addEventListener("submit", async (e) => {
   }
 });
 
-// Optional: Function to send email via backend
+// Function to send email via backend
 async function sendEmailToRecipient(email, claimUrl, amount, message) {
   try {
-    const response = await fetch('/api/send-email', {
+    const response = await fetch('http://localhost:3000/api/send-email', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, claimUrl, amount, message })
     });
 
-    if (!response.ok) {
-      console.warn("Email sending failed, but link is still valid");
+    if (response.ok) {
+      const data = await response.json();
+      console.log("✅ Email sent successfully:", data);
+      return true;
+    } else {
+      console.warn("⚠️ Email sending failed, but link is still valid");
+      return false;
     }
   } catch (error) {
-    console.warn("Email service unavailable, but link is still valid");
+    console.warn("⚠️ Email service unavailable, but link is still valid");
+    return false;
   }
 }

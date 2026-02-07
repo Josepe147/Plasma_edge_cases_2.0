@@ -1,0 +1,16 @@
+{
+  "username": "test1",
+  "passwordHash": "e5cd7ed5d63ecf0a751a9dd8ef65f2c36517bc28a81c5ee0669d6f493f6f1abbd3251402d202377b73dea637a058a8b32c73dc9fc802805abac5f4f126902a12",
+  "salt": "516b582fe3472e5c725129b81a3f2c1e",
+  "forename": "Joshua",
+  "surname": "Beckett",
+  "email": "",
+  "walletAddress": "0x510c54866eE5340416a413cCFE43a0BdE414E0EF",
+  "encryptedPrivateKey": {
+    "iv": "09cfd6a844b5552765a4238b007efcde",
+    "encryptedData": "e09eebbe6da4c2e0da6c75e439e023ca0087c08ae19e19b072f1d61e6562c906b351aafa4da442d15085bedde8a763247f9604c867ac25eeab92bca6fa8f7f3a90b3",
+    "authTag": "59b4eae52ebdac16c5edcc3dbe733471"
+  },
+  "mnemonic": "debris original husband addict grid giant inmate hamster fine note interest canoe",
+  "createdAt": "2026-02-07T21:05:15.221Z"
+}

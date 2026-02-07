@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin - User Management</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .user-list {
+      margin: 20px 0;
+    }
+    .user-card {
+      background: #f5f5f5;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .user-info {
+      flex: 1;
+    }
+    .user-actions button {
+      margin-left: 10px;
+    }
+    .danger-button {
+      background: #f44336;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .danger-button:hover {
+      background: #d32f2f;
+    }
+  </style>
+  <script src="nav.js"></script>
+</head>
+<body>
+
+<header>
+  <h1>👨‍💼 Admin Panel</h1>
+</header>
+
+<main>
+  <section>
+    <h2>User Management</h2>
+
+    <div style="margin-bottom: 20px;">
+      <button onclick="loadUsers()" style="margin-right: 10px;">🔄 Refresh</button>
+      <button onclick="clearAllUsers()" class="danger-button">🗑️ Delete All Users</button>
+    </div>
+
+    <div id="userCount" style="margin: 20px 0; font-size: 1.2em;"></div>
+    <div id="userList" class="user-list"></div>
+  </section>
+
+  <section style="margin-top: 40px;">
+    <h2>Quick Actions</h2>
+    <p><a href="/">← Back to Home</a></p>
+    <p><a href="/register.html">Register New User</a></p>
+    <p><a href="/login.html">Login</a></p>
+  </section>
+</main>
+
+<footer>
+  <p>&copy; 2026 Plasma</p>
+</footer>
+
+<script>
+const API_URL = "http://localhost:3000/api";
+
+async function loadUsers() {
+  try {
+    const response = await fetch(`${API_URL}/users`);
+    const data = await response.json();
+
+    document.getElementById('userCount').textContent =
+      `Total Users: ${data.count}`;
+
+    const userList = document.getElementById('userList');
+
+    if (data.users.length === 0) {
+      userList.innerHTML = '<p style="color: #666;">No users registered yet.</p>';
+      return;
+    }
+
+    userList.innerHTML = data.users.map(user => `
+      <div class="user-card">
+        <div class="user-info">
+          <strong>${user.forename} ${user.surname}</strong> (@${user.username})
+          <br>
+          <small style="color: #666;">
+            Email: ${user.email || 'N/A'}<br>
+            Wallet: ${user.walletAddress}<br>
+            Created: ${new Date(user.createdAt).toLocaleString()}
+          </small>
+        </div>
+        <div class="user-actions">
+          <button onclick="deleteUser('${user.username}')" class="danger-button">
+            Delete
+          </button>
+        </div>
+      </div>
+    `).join('');
+
+  } catch (error) {
+    console.error('Failed to load users:', error);
+    alert('Failed to load users. Is the server running?');
+  }
+}
+
+async function deleteUser(username) {
+  if (!confirm(`Delete user "${username}"? This cannot be undone!`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/user/${username}`, {
+      method: 'DELETE'
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(`✅ User "${username}" deleted`);
+      loadUsers();
+    } else {
+      alert(`❌ ${data.error}`);
+    }
+  } catch (error) {
+    console.error('Failed to delete user:', error);
+    alert('Failed to delete user. Check console.');
+  }
+}
+
+async function clearAllUsers() {
+  if (!confirm('⚠️ DELETE ALL USERS? This cannot be undone!')) {
+    return;
+  }
+
+  if (!confirm('Are you REALLY sure? Type YES in the next prompt.')) {
+    return;
+  }
+
+  const confirmation = prompt('Type YES to confirm deletion of ALL users:');
+  if (confirmation !== 'YES') {
+    alert('Cancelled.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_URL}/clear-all-users`, {
+      method: 'POST'
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      alert(`✅ ${data.message}`);
+      loadUsers();
+    } else {
+      alert(`❌ ${data.error}`);
+    }
+  } catch (error) {
+    console.error('Failed to clear users:', error);
+    alert('Failed to clear users. Check console.');
+  }
+}
+
+// Load users on page load
+loadUsers();
+</script>
+
+</body>
+</html>

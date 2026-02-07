@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Plasma Wallet Dashboard</title>
   <link rel="stylesheet" href="style.css">
+  <script src="nav.js"></script>
 </head>
 <body>
 
@@ -30,37 +31,58 @@
   import {
     Wallet,
     JsonRpcProvider,
-    formatEther
+    formatEther,
+    Network
   } from "https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.min.js";
 
   console.log("✅ ethers imported");
 
-  // Try to load custodial wallet from localStorage
+  // Check if user is logged in
+  const storedUser = sessionStorage.getItem("plasmaUser");
+  const storedPrivateKey = sessionStorage.getItem("plasmaPrivateKey");
+
   let wallet_key;
   let userProfile;
 
-  const storedWallet = localStorage.getItem("plasmaUserWallet");
-  const storedProfile = sessionStorage.getItem("plasmaUserProfile");
-
-  if (storedWallet) {
-    const walletData = JSON.parse(storedWallet);
-    wallet_key = walletData.privateKey;
-    console.log("🔑 Loaded custodial wallet");
-  } else {
-    // Fallback to demo wallet
-    wallet_key = "0x316a6df79c678f420a352b2ef577d4d16bd94462d9bb12b537b6e1360733ec61";
-    console.log("🔑 Using demo wallet");
-  }
-
-  if (storedProfile) {
-    userProfile = JSON.parse(storedProfile);
+  if (storedUser && storedPrivateKey) {
+    // User logged in via backend
+    userProfile = JSON.parse(storedUser);
+    wallet_key = storedPrivateKey;
+    console.log("🔑 Loaded user wallet");
     console.log("👤 User:", userProfile.username);
+  } else {
+    // Try legacy localStorage (for backward compatibility)
+    const legacyWallet = localStorage.getItem("plasmaUserWallet");
+    const legacyProfile = sessionStorage.getItem("plasmaUserProfile");
+
+    if (legacyWallet) {
+      const walletData = JSON.parse(legacyWallet);
+      wallet_key = walletData.privateKey;
+      console.log("🔑 Loaded legacy wallet");
+    } else {
+      // Not logged in - redirect to login
+      console.warn("⚠️ No active session");
+      window.location.href = "login.html";
+      throw new Error("Not logged in");
+    }
+
+    if (legacyProfile) {
+      userProfile = JSON.parse(legacyProfile);
+    }
   }
 
   console.log("🔑 Wallet key length:", wallet_key.length);
 
-  // Connect to Plasma Testnet
-  const provider = new JsonRpcProvider("https://testnet-rpc.plasma.to");
+  // Connect to Plasma Testnet (with ENS disabled)
+  const plasmaNetwork = Network.from({
+    name: "plasma-testnet",
+    chainId: 9746
+  });
+
+  const provider = new JsonRpcProvider("https://testnet-rpc.plasma.to", plasmaNetwork, {
+    staticNetwork: true,
+    ensAddress: null
+  });
   console.log("🌐 Provider created");
 
   // Load wallet
@@ -90,9 +112,12 @@
         <p><strong>Balance:</strong> ${balanceXPL} XPL</p>
         <p><em>Last updated: ${new Date().toLocaleTimeString()}</em></p>
         <p style="margin-top: 20px;">
-          <a href="send.html" style="padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+          <a href="send.html" style="padding: 10px 20px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; display: inline-block; margin-right: 10px;">
             Send Crypto Link
           </a>
+          <button onclick="logout()" style="padding: 10px 20px; background: #f44336; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Logout
+          </button>
         </p>
       `;
 
@@ -108,6 +133,13 @@
 
   // Poll every 5 seconds
   setInterval(updateBalance, 5000);
+
+  // Logout function (make it global)
+  window.logout = function() {
+    sessionStorage.clear();
+    localStorage.removeItem("plasmaUserWallet");
+    window.location.href = "login.html";
+  };
 </script>
 
 </body>

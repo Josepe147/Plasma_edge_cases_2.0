@@ -2,7 +2,8 @@
 export const config = {
   // Network settings
   RPC_URL: "https://testnet-rpc.plasma.to",
-  CHAIN_ID: 1301, // Plasma testnet chain ID
+  CHAIN_ID: 9746, // Plasma testnet chain ID (correct value)
+  NETWORK_NAME: "plasma-testnet",
 
   // Contract addresses (UPDATE AFTER DEPLOYMENT)
   ESCROW_CONTRACT_ADDRESS: "YOUR_DEPLOYED_CONTRACT_ADDRESS",
