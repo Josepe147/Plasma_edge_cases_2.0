@@ -78,7 +78,15 @@ Verifies the happy path. A sender creates a link by locking ETH, and the recipie
 
 testWrongSecretFails
 
-Ensures that providing an incorrect secret when attempting to claim a link results in a revert.
+Ensures that providing an incorrect secret when attempting to claim a link results in a revert (link cannot be found with the wrong secret hash).
+
+testAttackerCannotClaimWithoutSecret
+
+Confirms that an unauthorized third party cannot claim funds without the correct secret (claim attempt reverts when no valid secret is provided).
+
+testClaimPaysSpecifiedRecipientNotCaller
+
+Ensures claims pay the recipient address parameter (e.g., for relayers / gasless flows), not msg.sender. A relayer can submit the claim transaction, but funds still go to the intended recipient.
 
 testCannotClaimTwice
 

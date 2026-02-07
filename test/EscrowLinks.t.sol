@@ -46,6 +46,35 @@ contract EscrowLinksTest is Test {
         escrow.claim(wrong, recipient);
     }
 
+    function testAttackerCannotClaimWithoutSecret() public {
+        bytes32 secret = keccak256("secret");
+        bytes32 hash = _hash(secret);
+        address attacker = address(0xBAD);
+
+        vm.prank(sender);
+        escrow.createLink{value: 1 ether}(hash, 1 days, MEMO);
+
+        vm.prank(attacker);
+        vm.expectRevert(EscrowLinks.LinkNotFound.selector);
+        escrow.claim(bytes32(0), attacker);
+    }
+
+    function testClaimPaysSpecifiedRecipientNotCaller() public {
+        bytes32 secret = keccak256("secret");
+        bytes32 hash = _hash(secret);
+
+        vm.prank(sender);
+        escrow.createLink{value: 1 ether}(hash, 1 days, MEMO);
+
+        address relayer = makeAddr("relayer");
+
+        uint256 before = recipient.balance;
+        vm.prank(relayer);
+        escrow.claim(secret, recipient);
+
+        assertEq(recipient.balance, before + 1 ether);
+    }
+
     function testCannotClaimTwice() public {
         bytes32 secret = keccak256("my-secret");
         bytes32 hash = _hash(secret);
