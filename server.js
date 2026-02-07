@@ -458,6 +458,27 @@ app.post("/api/clear-all-users", (req, res) => {
   }
 });
 
+// API: Get deployment wallet (for development/testing only)
+app.get("/api/deployment-wallet", (req, res) => {
+  try {
+    const privateKey = process.env.PRIVATE_KEY;
+
+    if (!privateKey) {
+      return res.status(404).json({ error: "No deployment wallet configured" });
+    }
+
+    const wallet = new Wallet(privateKey);
+
+    res.json({
+      success: true,
+      privateKey: privateKey,
+      address: wallet.address
+    });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to get deployment wallet" });
+  }
+});
+
 // Health check
 app.get("/health", (req, res) => {
   res.json({

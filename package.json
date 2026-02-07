@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
+    "deploy": "forge script script/DeployEscrowLinks.s.sol:DeployEscrowLinks --rpc-url https://testnet-rpc.plasma.to --broadcast -vvv",
+    "check-balance": "node check_balance.js",
     "email-service": "node send_email.js",
     "email-test": "node send_email.js test",
     "dev": "node server.js"

@@ -9,7 +9,7 @@ import {
 
 // Configuration
 const RPC_URL = "https://testnet-rpc.plasma.to";
-const ESCROW_CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Placeholder
+const ESCROW_CONTRACT_ADDRESS = "0x8826F1D05Fc8c403df65dC57E3b8F671344a48a"; // Deployed contract
 
 // EscrowLinks ABI
 const ESCROW_ABI = [
