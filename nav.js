@@ -34,7 +34,10 @@
 
       <div class="plasma-actions">
         <button class="plasma-iconbtn" type="button" aria-label="Language / region (placeholder)" title="Language / region">
-          🌐
+          <a class="plasma-iconbtn plasma-iconbtn--logo" href="index.html" aria-label="Home">
+  <img src="assets/Logo_symbol_dark.svg" alt="" />
+</a>
+
         </button>
         <a id="plasmaCta" class="plasma-cta" href="${ctaHref}">
           ${ctaLabel}

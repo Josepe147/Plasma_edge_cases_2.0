@@ -410,3 +410,265 @@ footer{
   .hero__inner{ grid-template-columns: 1fr; }
   .motion-surface{ min-height: 220px; }
 }
+
+/* ---------------------------
+   Send vs Claim differentiation
+---------------------------- */
+
+/* small pill tags under hero copy */
+.hero__tags{
+  margin-top: 14px;
+  display:flex;
+  flex-wrap:wrap;
+  gap: 8px;
+}
+.tag{
+  display:inline-flex;
+  align-items:center;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.18);
+  background: rgba(255,255,255,.08);
+  color: rgba(255,255,255,.88);
+  font-size: 12px;
+  font-weight: 850;
+}
+.tag--send{
+  border-color: rgba(86,159,140,.38);
+  background: rgba(86,159,140,.16);
+}
+.tag--claim{
+  border-color: rgba(89,134,197,.40);
+  background: rgba(89,134,197,.16);
+}
+
+/* distinct hero skins */
+.hero--send{
+  background:
+    radial-gradient(1100px 620px at 18% 12%, rgba(86,159,140,.34), transparent 60%),
+    radial-gradient(920px 560px at 78% 46%, rgba(165,193,233,.18), transparent 64%),
+    linear-gradient(135deg, var(--plasma-green-900) 0%, var(--plasma-green-700) 52%, #071110 100%);
+}
+.hero--claim{
+  background:
+    radial-gradient(1100px 620px at 22% 18%, rgba(89,134,197,.34), transparent 60%),
+    radial-gradient(900px 560px at 78% 44%, rgba(109,71,145,.22), transparent 64%),
+    linear-gradient(135deg, #06121b 0%, #102643 55%, #070f18 100%);
+}
+.hero--claim .hero__kicker::before{
+  background: var(--plasma-blue-300);
+  box-shadow: 0 0 0 6px rgba(165,193,233,.18);
+}
+
+/* make claim page grid feel different */
+.page-grid--flip{
+  grid-template-columns: .9fr 1.4fr;
+}
+@media (max-width: 980px){
+  .page-grid--flip{ grid-template-columns: 1fr; }
+}
+
+/* motion surfaces: different vibe */
+.motion-surface--send{
+  background:
+    radial-gradient(520px 320px at 30% 30%, rgba(86,159,140,.38), transparent 62%),
+    radial-gradient(520px 320px at 70% 55%, rgba(255,255,255,.10), transparent 66%),
+    rgba(255,255,255,.06);
+}
+.motion-surface--claim{
+  background:
+    radial-gradient(520px 320px at 30% 30%, rgba(89,134,197,.34), transparent 62%),
+    radial-gradient(520px 320px at 70% 55%, rgba(109,71,145,.20), transparent 66%),
+    rgba(255,255,255,.06);
+}
+
+/* presentational “mini UI” inside motion surface */
+.motion-ui{
+  position:absolute;
+  inset: 18px 18px 54px;
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+.motion-ui--stack{
+  grid-template-columns: 1fr;
+  align-content: start;
+}
+
+.motion-card{
+  position:relative;
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.18);
+  backdrop-filter: blur(10px);
+  padding: 12px;
+  box-shadow: 0 18px 50px rgba(0,0,0,.26);
+  overflow:hidden;
+}
+.motion-card.is-on{
+  border-color: rgba(0,255,240,.22);
+  box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 0 70px rgba(0,255,240,.10);
+}
+.hero--claim .motion-card.is-on{
+  border-color: rgba(89,134,197,.28);
+  box-shadow: 0 18px 50px rgba(0,0,0,.28), 0 0 70px rgba(89,134,197,.12);
+}
+
+.motion-badge{
+  width: 30px; height: 30px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius: 10px;
+  font-weight: 900;
+  color: rgba(255,255,255,.94);
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+}
+.motion-title{
+  margin-top: 10px;
+  font-weight: 900;
+  letter-spacing:-0.02em;
+  color: rgba(255,255,255,.94);
+}
+.motion-sub{
+  margin-top: 4px;
+  font-size: 12.5px;
+  color: rgba(255,255,255,.76);
+}
+.motion-icon{
+  position:absolute;
+  right: 12px;
+  bottom: 10px;
+  font-size: 36px;
+  opacity: .95;
+  filter: drop-shadow(0 14px 24px rgba(0,0,0,.45));
+}
+
+/* bottom strip */
+.motion-strip{
+  position:absolute;
+  left: 18px;
+  right: 18px;
+  bottom: 16px;
+  height: 34px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(0,0,0,.16);
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  padding: 0 12px;
+}
+.dotx{
+  width:10px; height:10px; border-radius: 999px;
+  background: rgba(0,255,240,.60);
+  box-shadow: 0 0 0 6px rgba(0,255,240,.14);
+}
+.hero--claim .dotx{
+  background: rgba(165,193,233,.75);
+  box-shadow: 0 0 0 6px rgba(165,193,233,.16);
+}
+.motion-strip-text{
+  color: rgba(255,255,255,.82);
+  font-weight: 850;
+  font-size: 12.5px;
+}
+
+/* ============================
+   SEND HERO — CONTRAST FIX
+   (darker glass + stronger teal)
+============================ */
+
+/* Make the send hero darker (so white text pops) */
+.hero--send{
+  background:
+    radial-gradient(1100px 620px at 18% 12%, rgba(0,255,240,.22), transparent 60%),
+    radial-gradient(920px 560px at 78% 46%, rgba(255,255,255,.06), transparent 66%),
+    linear-gradient(135deg, #050c0b 0%, #071312 45%, #041010 100%) !important;
+}
+
+/* Ensure hero text is readable */
+.hero--send .hero__title,
+.hero--send .hero__sub,
+.hero--send .hero__kicker{
+  color: rgba(255,255,255,0.92) !important;
+}
+.hero--send .hero__sub{
+  color: rgba(255,255,255,0.76) !important;
+}
+
+/* Tags more contrast on dark hero */
+.hero--send .tag{
+  background: rgba(255,255,255,.08) !important;
+  border-color: rgba(255,255,255,.18) !important;
+  color: rgba(255,255,255,.90) !important;
+}
+.hero--send .tag--send{
+  background: rgba(0,255,240,.16) !important;
+  border-color: rgba(0,255,240,.32) !important;
+}
+
+/* Motion surface: darker glass */
+.motion-surface--send{
+  background:
+    radial-gradient(520px 320px at 30% 30%, rgba(0,255,240,.20), transparent 62%),
+    radial-gradient(520px 320px at 70% 55%, rgba(255,255,255,.06), transparent 68%),
+    rgba(255,255,255,.05) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+}
+
+/* Motion cards: darker + teal edge on active */
+.hero--send .motion-card{
+  background: rgba(0,0,0,.22) !important;
+  border-color: rgba(255,255,255,.16) !important;
+  box-shadow: 0 18px 50px rgba(0,0,0,.30) !important;
+}
+.hero--send .motion-card.is-on{
+  border-color: rgba(0,255,240,.32) !important;
+  box-shadow:
+    0 18px 50px rgba(0,0,0,.32),
+    0 0 70px rgba(0,255,240,.14) !important;
+}
+
+/* Bottom strip: darker and readable */
+.hero--send .motion-strip{
+  background: rgba(0,0,0,.18) !important;
+  border-color: rgba(255,255,255,.16) !important;
+}
+.hero--send .motion-strip-text{
+  color: rgba(255,255,255,.86) !important;
+}
+.hero--send .dotx{
+  background: rgba(0,255,240,.70) !important;
+  box-shadow: 0 0 0 6px rgba(0,255,240,.16) !important;
+}
+
+/* Buttons on send hero: ensure visible */
+.hero--send .btn{
+  color: rgba(255,255,255,.92) !important;
+}
+.hero--send .btn-ghost{
+  background: rgba(255,255,255,.10) !important;
+  border-color: rgba(255,255,255,.18) !important;
+}
+.hero--send .btn-ghost:hover{
+  background: rgba(255,255,255,.14) !important;
+  border-color: rgba(255,255,255,.24) !important;
+}
+.plasma-iconbtn--logo{
+  width: 38px;
+  height: 38px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  border: 1px solid rgba(10,21,18,0.12);
+  background: rgba(255,255,255,0.55);
+  overflow: hidden;
+}
+
+.plasma-iconbtn--logo img{
+  width: 18px;
+  height: 18px;
+  display: block;
+  opacity: 0.92;
+}

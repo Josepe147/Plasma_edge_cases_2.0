@@ -3,93 +3,185 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Send via Link - Plasma</title>
+  <title>Claim - Plasma</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 
-<body>
+<body class="page-claim">
   <main>
-    <section class="hero">
+    <section class="hero hero--claim">
       <div class="hero__inner">
         <div>
-          <div class="hero__kicker">Escrow Links</div>
-          <div class="hero__title">Send funds via a link.</div>
+          <div class="hero__kicker">Escrow Links • Claim</div>
+          <div class="hero__title">Redeem a link.<br/>Receive funds.</div>
           <p class="hero__sub">
-            Create an escrow link backed by a smart contract. Share it anywhere — recipients can claim with
-            a new wallet or their own address.
+            We verify the link on-chain, then you choose where to receive the funds.
+            No wallet? Create one instantly.
           </p>
 
+          <div class="hero__tags" aria-label="Claim highlights">
+            <span class="tag tag--claim">Verify</span>
+            <span class="tag">Choose destination</span>
+            <span class="tag">Claim</span>
+            <span class="tag">Instant wallet</span>
+          </div>
+
           <div class="hero__actions">
-            <a class="btn btn-ghost" href="claim.html">Claim a link</a>
-            <a class="btn btn-ghost" href="dashboard.html">View dashboard</a>
+            <a class="btn btn-ghost" href="send.html">Send a link</a>
+            <a class="btn btn-ghost" href="login.html">Sign in page</a>
           </div>
         </div>
 
         <div class="hero__media">
-          <!-- Motion placeholder: later replace this div with a video/canvas/Lottie -->
-          <div class="motion-surface" id="motionSendHero" aria-hidden="true"></div>
+          <div class="motion-surface motion-surface--claim" id="motionClaimHero" aria-hidden="true">
+            <div class="motion-ui motion-ui--stack">
+              <div class="motion-card is-on">
+                <div class="motion-badge">1</div>
+                <div class="motion-title">Verify</div>
+                <div class="motion-sub">Check on-chain</div>
+                <div class="motion-icon">🔒</div>
+              </div>
+
+              <div class="motion-card">
+                <div class="motion-badge">2</div>
+                <div class="motion-title">Choose</div>
+                <div class="motion-sub">New or existing</div>
+                <div class="motion-icon">👛</div>
+              </div>
+
+              <div class="motion-card">
+                <div class="motion-badge">3</div>
+                <div class="motion-title">Claim</div>
+                <div class="motion-sub">Funds delivered</div>
+                <div class="motion-icon">✅</div>
+              </div>
+            </div>
+
+            <div class="motion-strip">
+              <span class="dotx"></span>
+              <span class="motion-strip-text">Verified → ready to claim</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
-    <div class="page-grid">
-      <section class="card">
-        <div class="section-title">Create an escrow link</div>
-        <p class="section-sub">Enter the recipient details, amount and expiry. Your link will be generated below.</p>
-
-        <form id="sendForm" class="form" style="margin-top: 14px;">
-          <div class="field">
-            <div class="label">Recipient email</div>
-            <input id="recipientEmail" class="input" type="email" placeholder="name@email.com" required />
-          </div>
-
-          <div class="field">
-            <div class="label">Amount (XPL)</div>
-            <input id="amount" class="input" type="number" step="0.001" min="0.001" placeholder="0.50" required />
-            <div class="help">This will be locked in escrow until claimed or expired.</div>
-          </div>
-
-          <div class="field">
-            <div class="label">Message (optional)</div>
-            <textarea id="message" class="textarea" rows="3" placeholder="Add a short message..."></textarea>
-          </div>
-
-          <div class="field">
-            <div class="label">Link expiry</div>
-            <select id="expiry" class="select" required>
-              <option value="86400">24 hours</option>
-              <option value="259200">3 days</option>
-              <option value="604800">7 days</option>
-              <option value="2592000">30 days</option>
-            </select>
-          </div>
-
-          <button type="submit" id="sendButton" class="btn btn-primary">Create escrow link →</button>
-        </form>
-      </section>
-
+    <!-- flipped grid for claim to feel distinct -->
+    <div class="page-grid page-grid--flip">
       <aside class="card">
-        <div class="section-title">Output</div>
-        <p class="section-sub">Status and generated link will appear here.</p>
-
-        <div id="statusOutput" class="notice" style="margin-top: 14px;">
-          Ready.
-        </div>
-
-        <div id="linkOutput" class="codebox mono" style="display:none;"></div>
+        <div class="section-title">What you’ll do</div>
+        <p class="section-sub">A short, guided claim flow with clear states.</p>
 
         <div class="notice" style="margin-top: 14px;">
-          <strong>Motion-ready slot:</strong> later we can animate the link reveal here (slide-in / shimmer / confetti-lite).
+          <div style="font-weight:850;">Step 1 — Verify</div>
+          <div class="help" style="margin-top: 6px;">
+            We load the claim link, validate it, and show the amount + message.
+          </div>
+        </div>
+
+        <div class="notice" style="margin-top: 12px;">
+          <div style="font-weight:850;">Step 2 — Choose destination</div>
+          <div class="help" style="margin-top: 6px;">
+            Create a new wallet (demo) or claim to an existing address.
+          </div>
+        </div>
+
+        <div class="notice warn" style="margin-top: 12px;">
+          <div style="font-weight:850;">Demo note</div>
+          <div class="help" style="margin-top: 6px;">
+            This repo uses a simplified flow for demonstration. Use a relayer + secure key management in production.
+          </div>
         </div>
       </aside>
+
+      <section class="card card--solid">
+        <div class="section-title">Claim details</div>
+        <p class="section-sub">We’ll verify the link on-chain and guide you through the claim.</p>
+
+        <div id="loadingStatus" class="notice" style="margin-top: 14px;">Loading claim link…</div>
+
+        <div id="errorDisplay" style="display:none; margin-top: 14px;">
+          <div class="notice error">
+            <div style="font-weight:850;">Couldn’t load this claim link</div>
+            <div id="errorMessage" class="help" style="margin-top: 6px;"></div>
+          </div>
+        </div>
+
+        <div id="claimInfo" style="display:none; margin-top: 14px;">
+          <div class="card card--flat" style="padding: 16px;">
+            <div style="display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+              <div>
+                <div class="help" style="text-transform:uppercase; letter-spacing:.12em;">Amount</div>
+                <div style="font-size: 30px; font-weight: 900; letter-spacing:-0.03em; margin-top:6px;">
+                  <span id="amountDisplay">—</span> <span style="font-size: 13px; opacity:.75;">XPL</span>
+                </div>
+              </div>
+              <div style="min-width: 220px;">
+                <div class="help" style="text-transform:uppercase; letter-spacing:.12em;">Message</div>
+                <div id="messageDisplay" style="margin-top:6px; color: var(--text-2);">—</div>
+              </div>
+            </div>
+          </div>
+
+          <div style="margin-top: 14px;">
+            <div class="section-title" style="font-size:16px;">Choose how to receive</div>
+            <p class="section-sub">Create a new custodial wallet, or claim to an existing address.</p>
+
+            <div class="row" style="margin-top: 10px;">
+              <button id="createAccountBtn" class="btn btn-primary" type="button">Create new wallet</button>
+              <button id="useExistingBtn" class="btn" type="button">Use existing address</button>
+            </div>
+          </div>
+
+          <div id="newAccountForm" style="display:none; margin-top: 14px;">
+            <div class="card card--flat" style="padding: 16px;">
+              <div class="section-title" style="font-size:16px;">Create a wallet for you</div>
+              <p class="section-sub">This is a demo flow. In production, keys should be encrypted and secured.</p>
+
+              <form id="registerClaimForm" class="form" style="margin-top: 12px;">
+                <div class="field">
+                  <div class="label">Forename</div>
+                  <input id="forename" class="input" type="text" required />
+                </div>
+                <div class="field">
+                  <div class="label">Surname</div>
+                  <input id="surname" class="input" type="text" required />
+                </div>
+                <div class="field">
+                  <div class="label">Username</div>
+                  <input id="username" class="input" type="text" required />
+                </div>
+
+                <button class="btn btn-primary" type="submit">Create + claim →</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="existingWalletForm" style="display:none; margin-top: 14px;">
+            <div class="card card--flat" style="padding: 16px;">
+              <div class="section-title" style="font-size:16px;">Claim to an address</div>
+              <p class="section-sub">Paste your wallet address and submit the claim.</p>
+
+              <form id="existingClaimForm" class="form" style="margin-top: 12px;">
+                <div class="field">
+                  <div class="label">Wallet address</div>
+                  <input id="walletAddress" class="input" type="text" placeholder="0x…" required />
+                  <div class="help">Must be a valid 0x address.</div>
+                </div>
+                <button class="btn btn-primary" type="submit">Claim →</button>
+              </form>
+            </div>
+          </div>
+
+          <div id="claimStatus" class="notice" style="margin-top: 14px;">Ready.</div>
+        </div>
+      </section>
     </div>
 
-    <div class="footer">
-      &copy; 2026 Plasma
-    </div>
+    <div class="footer">&copy; 2026 Plasma</div>
   </main>
 
   <script src="nav.js"></script>
-  <script type="module" src="send.js"></script>
+  <script type="module" src="claim.js"></script>
 </body>
 </html>
