@@ -1,19 +1,19 @@
-// nav.js — Plasma-style top bar (uses your real assets/)
+// nav.js — Plasma-style top bar + optional homepage storyboard (no logic changes)
 (function () {
+  // NAV LINKS (your request: the "Dashboard" tab should go to index/home)
   const links = [
     { href: "send.html", label: "Send" },
     { href: "claim.html", label: "Claim" },
-    { href: "dashboard.html", label: "Dashboard" },
+    { href: "index.html", label: "Dashboard" }, // ✅ Dashboard tab returns to index
   ];
 
   const current = (location.pathname.split("/").pop() || "index.html").toLowerCase();
 
-  // Minimal “logged in” heuristic (works with your current app)
-  const hasSession =
-    !!sessionStorage.getItem("plasmaPrivateKey") ||
-    !!sessionStorage.getItem("plasmaUser") ||
-    !!localStorage.getItem("plasmaUserWallet");
+  // CTA (your request: text says "Sign in page", not dashboard)
+  const ctaHref = "login.html";
+  const ctaLabel = "Sign in page →";
 
+  // Build header
   const header = document.createElement("header");
   header.className = "plasma-topbar";
   header.innerHTML = `
@@ -36,8 +36,8 @@
         <button class="plasma-iconbtn" type="button" aria-label="Language / region (placeholder)" title="Language / region">
           🌐
         </button>
-        <a id="plasmaCta" class="plasma-cta" href="${hasSession ? "dashboard.html" : "login.html"}">
-          Go to Dashboard →
+        <a id="plasmaCta" class="plasma-cta" href="${ctaHref}">
+          ${ctaLabel}
         </a>
       </div>
     </div>
@@ -59,14 +59,66 @@
 
   let i = 0;
   function tryNext() {
+    if (!img) return;
     if (i >= logoCandidates.length) {
       img.style.display = "none";
-      fallbackText.style.display = "inline-block";
+      if (fallbackText) fallbackText.style.display = "inline-block";
       return;
     }
     img.src = logoCandidates[i++];
   }
 
-  img.onerror = tryNext;
-  tryNext();
+  if (img) {
+    img.onerror = tryNext;
+    tryNext();
+  }
+
+  // -------------------------------
+  // Optional: Homepage storyboard/slideshow
+  // Runs ONLY if the markup exists (class .mediaStoryboard).
+  // -------------------------------
+  function initHomepageStoryboard() {
+    const root = document.querySelector(".mediaStoryboard");
+    if (!root) return;
+
+    // Respect reduced motion (keep first frame)
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      const first = root.querySelector(".sbStep");
+      if (first) first.classList.add("is-active");
+      return;
+    }
+
+    const steps = Array.from(root.querySelectorAll(".sbStep"));
+    const bar = root.querySelector(".sbProgress span");
+    if (!steps.length || !bar) return;
+
+    let idx = 0;
+    const stepMs = 2400;
+
+    function show(i) {
+      steps.forEach((el, j) => el.classList.toggle("is-active", j === i));
+
+      // restart progress bar animation
+      bar.style.transition = "none";
+      bar.style.width = "0%";
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          bar.style.transition = `width ${stepMs}ms linear`;
+          bar.style.width = "100%";
+        });
+      });
+    }
+
+    show(idx);
+    setInterval(() => {
+      idx = (idx + 1) % steps.length;
+      show(idx);
+    }, stepMs);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHomepageStoryboard);
+  } else {
+    initHomepageStoryboard();
+  }
 })();
