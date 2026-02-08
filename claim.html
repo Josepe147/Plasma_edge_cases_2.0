@@ -1,92 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Claim Your Crypto - Plasma</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="nav.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Send via Link - Plasma</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <div>
+          <div class="hero__kicker">Escrow Links</div>
+          <div class="hero__title">Send funds via a link.</div>
+          <p class="hero__sub">
+            Create an escrow link backed by a smart contract. Share it anywhere — recipients can claim with
+            a new wallet or their own address.
+          </p>
 
-<header>
-  <h1>🎁 You've Received Crypto!</h1>
-</header>
+          <div class="hero__actions">
+            <a class="btn btn-ghost" href="claim.html">Claim a link</a>
+            <a class="btn btn-ghost" href="dashboard.html">View dashboard</a>
+          </div>
+        </div>
 
-<main>
-  <section class="form-section">
-    <div id="loadingStatus">
-      <p>⏳ Loading your gift...</p>
-    </div>
-
-    <div id="claimInfo" style="display: none;">
-      <div style="background: #e3f2fd; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h2>💰 <span id="amountDisplay">0</span> XPL</h2>
-        <p id="messageDisplay" style="margin: 10px 0;"></p>
+        <div class="hero__media">
+          <!-- Motion placeholder: later replace this div with a video/canvas/Lottie -->
+          <div class="motion-surface" id="motionSendHero" aria-hidden="true"></div>
+        </div>
       </div>
+    </section>
 
-      <div style="background: #fff3e0; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-        <h3>Choose how to receive your funds:</h3>
-      </div>
+    <div class="page-grid">
+      <section class="card">
+        <div class="section-title">Create an escrow link</div>
+        <p class="section-sub">Enter the recipient details, amount and expiry. Your link will be generated below.</p>
 
-      <div style="margin-bottom: 20px;">
-        <button id="createAccountBtn" class="primary-button" style="width: 100%; padding: 15px; margin-bottom: 10px;">
-          🆕 Create New Plasma Account (Recommended)
-        </button>
-        <button id="useExistingBtn" class="secondary-button" style="width: 100%; padding: 15px;">
-          🔑 I Have My Own Wallet Address
-        </button>
-      </div>
+        <form id="sendForm" class="form" style="margin-top: 14px;">
+          <div class="field">
+            <div class="label">Recipient email</div>
+            <input id="recipientEmail" class="input" type="email" placeholder="name@email.com" required />
+          </div>
 
-      <!-- New Account Creation Form -->
-      <div id="newAccountForm" style="display: none;">
-        <h3>Create Your Account</h3>
-        <form id="registerClaimForm">
-          <label>Forename</label>
-          <input id="forename" type="text" required>
+          <div class="field">
+            <div class="label">Amount (XPL)</div>
+            <input id="amount" class="input" type="number" step="0.001" min="0.001" placeholder="0.50" required />
+            <div class="help">This will be locked in escrow until claimed or expired.</div>
+          </div>
 
-          <label>Surname</label>
-          <input id="surname" type="text" required>
+          <div class="field">
+            <div class="label">Message (optional)</div>
+            <textarea id="message" class="textarea" rows="3" placeholder="Add a short message..."></textarea>
+          </div>
 
-          <label>Username</label>
-          <input id="username" type="text" required>
+          <div class="field">
+            <div class="label">Link expiry</div>
+            <select id="expiry" class="select" required>
+              <option value="86400">24 hours</option>
+              <option value="259200">3 days</option>
+              <option value="604800">7 days</option>
+              <option value="2592000">30 days</option>
+            </select>
+          </div>
 
-          <label>Password</label>
-          <input id="password" type="password" required>
-
-          <label>
-            <input type="checkbox" required>
-            I agree to the Terms and Conditions
-          </label>
-
-          <button type="submit">Create Account & Claim Funds</button>
+          <button type="submit" id="sendButton" class="btn btn-primary">Create escrow link →</button>
         </form>
-      </div>
+      </section>
 
-      <!-- Existing Wallet Form -->
-      <div id="existingWalletForm" style="display: none;">
-        <h3>Enter Your Wallet Address</h3>
-        <form id="existingClaimForm">
-          <label>Wallet Address</label>
-          <input id="walletAddress" type="text" placeholder="0x..." required>
+      <aside class="card">
+        <div class="section-title">Output</div>
+        <p class="section-sub">Status and generated link will appear here.</p>
 
-          <button type="submit">Claim to This Address</button>
-        </form>
-      </div>
+        <div id="statusOutput" class="notice" style="margin-top: 14px;">
+          Ready.
+        </div>
 
-      <div id="claimStatus" style="margin-top: 20px;"></div>
+        <div id="linkOutput" class="codebox mono" style="display:none;"></div>
+
+        <div class="notice" style="margin-top: 14px;">
+          <strong>Motion-ready slot:</strong> later we can animate the link reveal here (slide-in / shimmer / confetti-lite).
+        </div>
+      </aside>
     </div>
 
-    <div id="errorDisplay" style="display: none; color: red; padding: 20px;">
-      <h3>❌ Error</h3>
-      <p id="errorMessage"></p>
+    <div class="footer">
+      &copy; 2026 Plasma
     </div>
-  </section>
-</main>
+  </main>
 
-<footer>
-  <p>&copy; 2026 Plasma</p>
-</footer>
-
-<script type="module" src="claim.js"></script>
+  <script src="nav.js"></script>
+  <script type="module" src="send.js"></script>
 </body>
 </html>

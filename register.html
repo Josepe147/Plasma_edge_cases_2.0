@@ -1,46 +1,79 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Plasma Account Registration</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="nav.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - Plasma</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
+  <main>
+    <section class="hero">
+      <div class="hero__inner">
+        <div>
+          <div class="hero__kicker">Account</div>
+          <div class="hero__title">Create your account.</div>
+          <p class="hero__sub">
+            Generate a custodial wallet and start sending escrow links.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn-ghost" href="login.html">Already have one? Login</a>
+            <a class="btn btn-ghost" href="index.html">Back to home</a>
+          </div>
+        </div>
 
-<header>
-  <h1>Create Your Plasma Account</h1>
-</header>
+        <div class="hero__media">
+          <div class="motion-surface" id="motionRegisterHero" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
 
-<main>
-  <section class="form-section">
-    <form id="registerForm">
-      <label>Forename</label>
-      <input id="forename" type="text" required>
+    <section class="card" style="max-width: 560px; margin: 18px auto 0;">
+      <div class="section-title">Register</div>
+      <p class="section-sub">Create a profile for the demo wallet experience.</p>
 
-      <label>Surname</label>
-      <input id="surname" type="text" required>
+      <form id="registerForm" class="form" style="margin-top: 14px;">
+        <div class="field">
+          <div class="label">Forename</div>
+          <input id="forename" class="input" type="text" required />
+        </div>
 
-      <label>Username</label>
-      <input id="username" type="text" required>
+        <div class="field">
+          <div class="label">Surname</div>
+          <input id="surname" class="input" type="text" required />
+        </div>
 
-      <label>Password</label>
-      <input id="password" type="password" required>
+        <div class="field">
+          <div class="label">Username</div>
+          <input id="username" class="input" type="text" required />
+        </div>
 
-      <label>
-        <input type="checkbox" required>
-        I agree to the Terms and Conditions
-      </label>
+        <div class="field">
+          <div class="label">Password</div>
+          <input id="password" class="input" type="password" required />
+        </div>
 
-      <button type="submit">Register</button>
-    </form>
-  </section>
-</main>
+        <label class="help" style="display:flex; gap:10px; align-items:center;">
+          <input type="checkbox" required />
+          I agree to the Terms and Conditions
+        </label>
 
-<footer>
-  <p>&copy; 2026 Plasma</p>
-</footer>
+        <button type="submit" class="btn btn-primary">Create account →</button>
+      </form>
 
-<script src="register.js"></script>
+      <!-- register.js will append #statusOutput automatically -->
+      <p class="help" style="text-align:center; margin-top: 14px;">
+        Already registered? <a href="login.html">Login</a>.
+      </p>
+    </section>
+
+    <div class="footer">
+      &copy; 2026 Plasma
+    </div>
+  </main>
+
+  <script src="nav.js"></script>
+  <script src="register.js"></script>
 </body>
 </html>
